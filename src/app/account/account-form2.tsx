@@ -60,7 +60,7 @@ export default function AccountForm2({ session }: { session: Session | null }) {
 
   async function updateProfile({
     username,
-
+    fullname,
     avatar_url,
   }: {
     username: string | null;

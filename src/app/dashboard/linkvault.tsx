@@ -8,6 +8,7 @@ import {
   Session,
   createClientComponentClient,
 } from "@supabase/auth-helpers-nextjs";
+import LinkCards from "./link-cards";
 
 export default function LinkVault({ session }: { session: Session | null }) {
   const supabase = createClientComponentClient<Database>();
@@ -17,39 +18,36 @@ export default function LinkVault({ session }: { session: Session | null }) {
 
   const user = session?.user;
 
-  // const getProfile = useCallback(async () => {
-  //     try {
-  //       setLoading(true);
+  const getProfile = useCallback(async () => {
+    try {
+      let { data, error, status } = await supabase
+        .from("profiles")
+        .select(`full_name, username, avatar_url`)
+        .eq("id", user?.id)
+        .single();
 
-  //       let { data, error, status } = await supabase
-  //         .from("profiles")
-  //         .select(`full_name, username, avatar_url`)
-  //         .eq("id", user?.id)
-  //         .single();
+      if (error && status !== 406) {
+        throw error;
+      }
 
-  //       if (error && status !== 406) {
-  //         throw error;
-  //       }
+      if (data) {
+        setFullname(data.full_name);
+        setUsername(data.username);
+      }
+    } catch (error) {
+      alert("Error loading user data!");
+    } finally {
+    }
+  }, [user, supabase]);
 
-  //       if (data) {
-  //         setFullname(data.full_name);
-  //         setUsername(data.username);
+  useEffect(() => {
+    getProfile();
+  }, [user, getProfile]);
 
-  //         if (data.full_name && data.username) {
-  //           setSubmitted(true);
-  //         }
-  //         setAvatarUrl(data.avatar_url);
-  //       }
-  //     } catch (error) {
-  //       alert("Error loading user data!");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }, [user, supabase]);
-
-  //   useEffect(() => {
-  //     getProfile();
-  //   }, [user, getProfile]);
-
-  return <div></div>;
+  return (
+    <div>
+      <Navbar username={username} />
+      <LinkCards />
+    </div>
+  );
 }

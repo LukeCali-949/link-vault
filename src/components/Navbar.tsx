@@ -12,7 +12,10 @@ const Navbar = ({ username }: { username: Profiles["username"] }) => {
   return (
     <div className="navbar bg-base-100 mx-auto w-full md:w-1/2 rounded-lg border-4 mb-10">
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">{`${username}'s LinkVault`}</a>
+        <Link
+          href="/dashboard"
+          className="btn btn-ghost normal-case text-xl"
+        >{`${username}'s LinkVault`}</Link>
       </div>
 
       <div className="dropdown dropdown-end">
