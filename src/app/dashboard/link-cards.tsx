@@ -7,11 +7,14 @@ import {
   createClientComponentClient,
 } from "@supabase/auth-helpers-nextjs";
 import ImageUpload from "./image-upload";
+import LinkCard from "./link-card";
 
 type Link = {
+  title: string;
   url: string;
   image_url: string;
   description: string;
+  key: number;
 };
 
 //https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg
@@ -26,9 +29,30 @@ export default function LinkCards({ session }: { session: Session | null }) {
 
   const [url, setUrl] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
   const [image_url, setImageUrl] = useState<string | null>(null);
 
   const [links, setLinks] = useState<Link[]>([]);
+
+  async function downloadImageFromPath(path: string | null): Promise<string> {
+    if (!path) {
+      return "";
+    }
+
+    try {
+      const { data, error } = await supabase.storage
+        .from("linkimages")
+        .download(path);
+      if (error) {
+        throw error;
+      }
+
+      return URL.createObjectURL(data);
+    } catch (error) {
+      console.error("Error downloading image: ", error);
+      return ""; // or return a default/fallback image URL if you have one
+    }
+  }
 
   const getLinks = useCallback(async () => {
     try {
@@ -36,7 +60,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
 
       let { data, error } = await supabase
         .from("links")
-        .select("url, image_url, description")
+        .select("url, image_url, description, title")
         .eq("user_id", user?.id);
 
       if (error) {
@@ -44,10 +68,16 @@ export default function LinkCards({ session }: { session: Session | null }) {
       }
 
       if (data) {
-        const filteredData: Link[] = data.map((link: any) => ({
+        const blobUrls = await Promise.all(
+          data.map((link) => downloadImageFromPath(link.image_url))
+        );
+
+        const filteredData: Link[] = data.map((link: any, index: number) => ({
           url: link.url,
-          image_url: link.image_url,
+          title: link.title,
+          image_url: blobUrls[index],
           description: link.description,
+          key: link.id,
         }));
 
         setLinks(filteredData);
@@ -59,12 +89,17 @@ export default function LinkCards({ session }: { session: Session | null }) {
     }
   }, [user, supabase]);
 
+  useEffect(() => {
+    getLinks();
+  }, []);
+
   const closeModal = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       setShowModal(false);
       setDescription("");
       setUrl("");
       setImageUrl(null);
+      setTitle("");
     }
   };
 
@@ -72,11 +107,12 @@ export default function LinkCards({ session }: { session: Session | null }) {
     description,
     url,
     image_url,
+    title,
   }: {
     description: string | null;
     url: string | null;
-
     image_url: string | null;
+    title: string | null;
   }) {
     try {
       setLoading(true);
@@ -85,11 +121,12 @@ export default function LinkCards({ session }: { session: Session | null }) {
         user_id: user?.id as string,
         url,
         description,
-
+        title,
         image_url,
         updated_at: new Date().toISOString(),
       });
       if (error) throw error;
+      getLinks();
       //alert("Links updated!");
     } catch (error) {
       alert("Error");
@@ -99,19 +136,29 @@ export default function LinkCards({ session }: { session: Session | null }) {
   }
 
   return (
-    <div className="ml-12">
-      <div
-        onClick={() => {
-          console.log("done");
-          setShowModal(true);
-        }}
-        className="w-[170px] h-[250px] bg-white flex flex-col rounded-lg border-4 shadow-xl hover:border-black hover:cursor-pointer"
-      >
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/256px-Plus_symbol.svg.png"
-          alt="Shoes"
-        />
-        <h2 className="card-title mx-auto">Add Link</h2>
+    <div className="ml-[100px]">
+      <div className="flex gap-5">
+        <div
+          onClick={() => {
+            setShowModal(true);
+          }}
+          className="w-[170px] mr-[100px] h-[250px] bg-white flex flex-col rounded-lg border-4 shadow-xl hover:border-black hover:cursor-pointer"
+        >
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/256px-Plus_symbol.svg.png"
+            alt="Shoes"
+          />
+          <h2 className="card-title mx-auto">Add Link</h2>
+        </div>
+        {links.map((linkObject) => (
+          <LinkCard
+            title={linkObject.title}
+            url={linkObject.url}
+            image_url={linkObject.image_url}
+            description={linkObject.description}
+            key={linkObject.key}
+          />
+        ))}
       </div>
 
       {showModal && (
@@ -130,6 +177,25 @@ export default function LinkCards({ session }: { session: Session | null }) {
               Please complete all link information
             </p>
 
+            <div className="mt-5">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Title
+              </label>
+              <div className="mt-2">
+                <input
+                  id="title"
+                  name="title"
+                  value={title || ""}
+                  onChange={(e) => setTitle(e.target.value)}
+                  type="title"
+                  autoComplete="title"
+                  className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
             <div className="mt-5">
               <label
                 htmlFor="url"
@@ -189,6 +255,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                   setDescription("");
                   setUrl("");
                   setImageUrl(null);
+                  setTitle("");
                   setShowModal(false);
                 }}
               >
@@ -196,10 +263,10 @@ export default function LinkCards({ session }: { session: Session | null }) {
               </button>
               <button
                 onClick={() => {
-                  if (!url || !description) {
-                    alert("Error: Cannot submit with fields empty");
+                  if (!url || !title) {
+                    alert("Error: Cannot submit with url or tile fields empty");
                   } else {
-                    updateLinks({ url, description, image_url });
+                    updateLinks({ url, description, image_url, title });
                   }
                 }}
                 disabled={loading}
@@ -211,6 +278,12 @@ export default function LinkCards({ session }: { session: Session | null }) {
           </form>
         </div>
       )}
+      <div className="form-control absolute top-0">
+        <label className="label cursor-pointer">
+          <span className="label-text">Remember me</span>
+          <input type="checkbox" className="toggle" checked />
+        </label>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,6 @@
 LIMIT UPLOAD FILE SIZE AND ADD FUNCTIONALITY WHEN A USER UPDATES THEIR AVATAR, THEIR OLD ONE IS DELTED
 
 limit length of username and fullname
+
+have different modes for the adding to the links, one for viewing descriptions plus editing
+and the normal mode, where a user can just click on the card and it will open the site
