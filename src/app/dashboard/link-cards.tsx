@@ -1,21 +1,102 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { Database } from "../database.types";
+import {
+  Session,
+  createClientComponentClient,
+} from "@supabase/auth-helpers-nextjs";
+import ImageUpload from "./image-upload";
+
+type Link = {
+  url: string;
+  image_url: string;
+  description: string;
+};
 
 //https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg
 
-export default function LinkCards() {
+export default function LinkCards({ session }: { session: Session | null }) {
+  const supabase = createClientComponentClient<Database>();
+
+  const user = session?.user;
+
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const [url, setUrl] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
-  const [avatar_url, setAvatarUrl] = useState<string | null>(null);
+  const [image_url, setImageUrl] = useState<string | null>(null);
+
+  const [links, setLinks] = useState<Link[]>([]);
+
+  const getLinks = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      let { data, error } = await supabase
+        .from("links")
+        .select("url, image_url, description")
+        .eq("user_id", user?.id);
+
+      if (error) {
+        throw error;
+      }
+
+      if (data) {
+        const filteredData: Link[] = data.map((link: any) => ({
+          url: link.url,
+          image_url: link.image_url,
+          description: link.description,
+        }));
+
+        setLinks(filteredData);
+      }
+    } catch (error) {
+      alert("Error loading user data!");
+    } finally {
+      setLoading(false);
+    }
+  }, [user, supabase]);
 
   const closeModal = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       setShowModal(false);
+      setDescription("");
+      setUrl("");
+      setImageUrl(null);
     }
   };
+
+  async function updateLinks({
+    description,
+    url,
+    image_url,
+  }: {
+    description: string | null;
+    url: string | null;
+
+    image_url: string | null;
+  }) {
+    try {
+      setLoading(true);
+
+      let { error } = await supabase.from("links").insert({
+        user_id: user?.id as string,
+        url,
+        description,
+
+        image_url,
+        updated_at: new Date().toISOString(),
+      });
+      if (error) throw error;
+      //alert("Links updated!");
+    } catch (error) {
+      alert("Error");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="ml-12">
@@ -88,9 +169,16 @@ export default function LinkCards() {
                 />
               </div>
             </div>
-            {avatar_url || (
-              <img src="https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"></img>
-            )}
+
+            <ImageUpload
+              uid={user!.id}
+              url={image_url}
+              size={150}
+              onUpload={(url) => {
+                setImageUrl(url);
+                //updateLinks({ description, url, image_url });
+              }}
+            />
 
             <div className="flex items-center justify-end gap-4">
               <button
@@ -98,16 +186,26 @@ export default function LinkCards() {
                 className="text-sm font-semibold text-gray-700"
                 onClick={() => {
                   //   eraseForm();
+                  setDescription("");
+                  setUrl("");
+                  setImageUrl(null);
                   setShowModal(false);
                 }}
               >
                 Cancel
               </button>
               <button
-                type="submit"
-                className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                onClick={() => {
+                  if (!url || !description) {
+                    alert("Error: Cannot submit with fields empty");
+                  } else {
+                    updateLinks({ url, description, image_url });
+                  }
+                }}
+                disabled={loading}
+                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Submit
+                {loading ? "Loading ..." : "Submit"}
               </button>
             </div>
           </form>

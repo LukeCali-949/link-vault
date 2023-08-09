@@ -47,7 +47,7 @@ export default function LinkVault({ session }: { session: Session | null }) {
   return (
     <div>
       <Navbar username={username} />
-      <LinkCards />
+      <LinkCards session={session} />
     </div>
   );
 }

@@ -35,6 +35,34 @@ export interface Database {
           avatar_url?: string | null;
         };
       };
+      links: {
+        Row: {
+          id: number;
+          user_id: string;
+          updated_at: string | null;
+          created_at: string | null;
+          description: string | null;
+          url: string | null;
+          image_url: string | null;
+        };
+        Insert: {
+          user_id: string;
+          updated_at?: string | null;
+          created_at?: string | null;
+          description?: string | null;
+          url?: string | null;
+          image_url?: string | null;
+        };
+        Update: {
+          id?: number;
+          user_id?: string;
+          updated_at?: string | null;
+          created_at?: string | null;
+          description?: string | null;
+          url?: string | null;
+          image_url?: string | null;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
