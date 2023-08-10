@@ -11,11 +11,13 @@ export default function ImageUpload({
   url,
   size,
   onUpload,
+  mode,
 }: {
   uid: string;
   url: Links["image_url"];
   size: number;
   onUpload: (url: string) => void;
+  mode: string;
 }) {
   const supabase = createClientComponentClient<Database>();
   const [imageUrl, setImageUrl] = useState<Links["image_url"]>(url);
@@ -86,25 +88,27 @@ export default function ImageUpload({
           src="https://static.vecteezy.com/system/resources/previews/004/141/669/non_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
         />
       )}
-      <div style={{ width: size }}>
-        <label
-          className="ml-1 rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-          htmlFor="single"
-        >
-          {uploading ? "Uploading ..." : "Upload"}
-        </label>
-        <input
-          style={{
-            visibility: "hidden",
-            position: "absolute",
-          }}
-          type="file"
-          id="single"
-          accept="image/*"
-          onChange={uploadImage}
-          disabled={uploading}
-        />
-      </div>
+      {mode === "view" && (
+        <div style={{ width: size }}>
+          <label
+            className="ml-1 rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            htmlFor="single"
+          >
+            {uploading ? "Uploading ..." : "Upload"}
+          </label>
+          <input
+            style={{
+              visibility: "hidden",
+              position: "absolute",
+            }}
+            type="file"
+            id="single"
+            accept="image/*"
+            onChange={uploadImage}
+            disabled={uploading}
+          />
+        </div>
+      )}
     </div>
   );
 }

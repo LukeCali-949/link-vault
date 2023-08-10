@@ -8,12 +8,14 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 import ImageUpload from "./image-upload";
 import LinkCard from "./link-card";
+import { Tabs, Tab } from "@nextui-org/react";
 
 type Link = {
   title: string;
   url: string;
   image_url: string;
   description: string;
+  id: number;
   key: number;
 };
 
@@ -24,6 +26,8 @@ export default function LinkCards({ session }: { session: Session | null }) {
 
   const user = session?.user;
 
+  const [mode, setMode] = useState<string>("view");
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +35,8 @@ export default function LinkCards({ session }: { session: Session | null }) {
   const [description, setDescription] = useState<string | null>(null);
   const [title, setTitle] = useState<string | null>(null);
   const [image_url, setImageUrl] = useState<string | null>(null);
+
+  const [currentId, setCurrentId] = useState<number | null>(null);
 
   const [links, setLinks] = useState<Link[]>([]);
 
@@ -54,13 +60,33 @@ export default function LinkCards({ session }: { session: Session | null }) {
     }
   }
 
+  const deleteLink = async (id: number) => {
+    try {
+      const { data, error } = await supabase
+        .from("links")
+        .delete()
+        .eq("id", id); // assuming "id" is the column name for the primary key
+
+      if (error) {
+        throw error;
+      }
+
+      if (data) {
+        //setLinks((prevLinks) => prevLinks.filter((link) => link.id !== id));
+        //alert("Link deleted successfully!");
+      }
+    } catch (error) {
+      //alert(error);
+    }
+  };
+
   const getLinks = useCallback(async () => {
     try {
       setLoading(true);
 
       let { data, error } = await supabase
         .from("links")
-        .select("url, image_url, description, title")
+        .select("url, image_url, description, title, id")
         .eq("user_id", user?.id);
 
       if (error) {
@@ -77,6 +103,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
           title: link.title,
           image_url: blobUrls[index],
           description: link.description,
+          id: link.id,
           key: link.id,
         }));
 
@@ -135,38 +162,63 @@ export default function LinkCards({ session }: { session: Session | null }) {
     }
   }
 
+  const tabs = ["View", "Edit"];
+
   return (
     <div className="ml-[100px]">
       <div className="flex gap-5">
-        <div
-          onClick={() => {
-            setShowModal(true);
-          }}
-          className="w-[170px] mr-[100px] h-[250px] bg-white flex flex-col rounded-lg border-4 shadow-xl hover:border-black hover:cursor-pointer"
-        >
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/256px-Plus_symbol.svg.png"
-            alt="Shoes"
-          />
-          <h2 className="card-title mx-auto">Add Link</h2>
-        </div>
+        {mode === "view" && (
+          <div
+            onClick={() => {
+              setShowModal(true);
+            }}
+            className="w-[170px] mr-[100px] h-[250px] bg-white flex flex-col rounded-lg border-4 shadow-xl hover:border-black hover:cursor-pointer"
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/256px-Plus_symbol.svg.png"
+              alt="Shoes"
+            />
+            <h2 className="card-title mx-auto">Add Link</h2>
+          </div>
+        )}
         {links.map((linkObject) => (
           <LinkCard
+            id={linkObject.id}
+            setShowModal={setShowModal}
             title={linkObject.title}
             url={linkObject.url}
             image_url={linkObject.image_url}
             description={linkObject.description}
             key={linkObject.key}
+            mode={mode}
+            session={session}
+            setUrl={setUrl}
+            setDescription={setDescription}
+            setTitle={setTitle}
+            setImageUrl={setImageUrl}
+            setCurrentId={setCurrentId}
           />
         ))}
       </div>
+      <Tabs
+        className="absolute top-2"
+        onSelectionChange={(index: any) => {
+          // Do something when the selected tab changes
+          setMode(tabs[index].toLowerCase());
+          // console.log(`Selected tab: ${tabs[index]}`);
+        }}
+      >
+        {tabs.map((tab, index) => (
+          <Tab key={index} title={tab} />
+        ))}
+      </Tabs>
 
       {showModal && (
         <div
           onClick={closeModal}
           className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
         >
-          <form
+          <div
             className="bg-white p-10 rounded-lg mx-auto w-full sm:w-3/4 lg:w-1/2 space-y-8"
             // onSubmit={magicLinkLogin}
           >
@@ -185,15 +237,27 @@ export default function LinkCards({ session }: { session: Session | null }) {
                 Title
               </label>
               <div className="mt-2">
-                <input
-                  id="title"
-                  name="title"
-                  value={title || ""}
-                  onChange={(e) => setTitle(e.target.value)}
-                  type="title"
-                  autoComplete="title"
-                  className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
+                {mode === "view" ? (
+                  <input
+                    id="title"
+                    name="title"
+                    value={title || ""}
+                    onChange={(e) => setTitle(e.target.value)}
+                    type="title"
+                    autoComplete="title"
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                ) : (
+                  <input
+                    id="title"
+                    name="title"
+                    value={title || ""}
+                    readOnly
+                    type="title"
+                    autoComplete="title"
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                )}
               </div>
             </div>
             <div className="mt-5">
@@ -204,15 +268,27 @@ export default function LinkCards({ session }: { session: Session | null }) {
                 URL
               </label>
               <div className="mt-2">
-                <input
-                  id="url"
-                  name="url"
-                  value={url || ""}
-                  onChange={(e) => setUrl(e.target.value)}
-                  type="url"
-                  autoComplete="url"
-                  className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
+                {mode === "view" ? (
+                  <input
+                    id="url"
+                    name="url"
+                    value={url || ""}
+                    onChange={(e) => setUrl(e.target.value)}
+                    type="url"
+                    autoComplete="url"
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                ) : (
+                  <input
+                    id="url"
+                    name="url"
+                    value={url || ""}
+                    readOnly
+                    type="url"
+                    autoComplete="url"
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                )}
               </div>
             </div>
 
@@ -224,15 +300,27 @@ export default function LinkCards({ session }: { session: Session | null }) {
                 Description
               </label>
               <div className="mt-2">
-                <input
-                  id="description"
-                  name="description"
-                  value={description || ""}
-                  onChange={(e) => setDescription(e.target.value)}
-                  type="description"
-                  autoComplete="description"
-                  className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
+                {mode === "view" ? (
+                  <input
+                    id="description"
+                    name="description"
+                    value={description || ""}
+                    onChange={(e) => setDescription(e.target.value)}
+                    type="description"
+                    autoComplete="description"
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                ) : (
+                  <input
+                    id="description"
+                    name="description"
+                    value={description || ""}
+                    readOnly
+                    type="description"
+                    autoComplete="description"
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                )}
               </div>
             </div>
 
@@ -244,6 +332,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                 setImageUrl(url);
                 //updateLinks({ description, url, image_url });
               }}
+              mode={mode}
             />
 
             <div className="flex items-center justify-end gap-4">
@@ -262,28 +351,41 @@ export default function LinkCards({ session }: { session: Session | null }) {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                  if (!url || !title) {
-                    alert("Error: Cannot submit with url or tile fields empty");
+                onClick={(e) => {
+                  if (mode === "view") {
+                    if (!url || !title) {
+                      alert(
+                        "Error: Cannot submit with url or tile fields empty"
+                      );
+                    } else {
+                      updateLinks({ url, description, image_url, title });
+                    }
                   } else {
-                    updateLinks({ url, description, image_url, title });
+                    if (currentId) {
+                      deleteLink(currentId);
+                      const newLinks = links.filter(
+                        (link) => link.id !== currentId
+                      ); // Remove the deleted link from the state without fetching
+                      setLinks(newLinks);
+                      setShowModal(false);
+                    }
                   }
                 }}
                 disabled={loading}
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className={`rounded-md ${
+                  mode === "view"
+                    ? "bg-indigo-600 hover:bg-indigo-500 focus-visible:outline-indigo-600"
+                    : "bg-red-600 hover:bg-red-500 focus-visible:outline-red-600"
+                } px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 `}
               >
-                {loading ? "Loading ..." : "Submit"}
+                {loading
+                  ? "Loading ..."
+                  : `${mode === "view" ? "Submit" : "Delete"}`}
               </button>
             </div>
-          </form>
+          </div>
         </div>
       )}
-      <div className="form-control absolute top-0">
-        <label className="label cursor-pointer">
-          <span className="label-text">Remember me</span>
-          <input type="checkbox" className="toggle" checked />
-        </label>
-      </div>
     </div>
   );
 }

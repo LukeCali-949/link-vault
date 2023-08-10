@@ -5,12 +5,16 @@ import supabase from "@/lib/supabaseClient";
 import { User } from "@supabase/supabase-js";
 import AuthForm from "./auth-form";
 
+import { NextUIProvider } from "@nextui-org/react";
+
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   return (
     <div>
-      <AuthForm />
+      <NextUIProvider>
+        <AuthForm />
+      </NextUIProvider>
     </div>
   );
 }
