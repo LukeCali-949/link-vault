@@ -5,8 +5,8 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Link Vault",
-  description: "Store all your links!",
+  title: "LinkVault",
+  description: "Store all your links in one place!",
 };
 
 export default function RootLayout({
@@ -16,6 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={inter.className}>
         <div className="bg-gradient-to-r from-[#4b6cb7] to-[#182848] min-h-screen">
           {children}

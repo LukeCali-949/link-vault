@@ -93,13 +93,14 @@ export default function AccountForm2({ session }: { session: Session | null }) {
     <div>
       {username && fullname && submitted && <Navbar username={username} />}
 
-      <div className="space-y-12 bg-white mx-auto w-[50%] py-10 px-10 rounded-lg mb-10">
+      <div className="space-y-12 bg-white mx-auto sm:w-[50%] w-[80%] py-10 px-10 rounded-lg mb-10">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
             Profile
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Please complete all profile information.
+            Please complete all profile information. (Username and Full Name
+            required to continue)
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -129,7 +130,7 @@ export default function AccountForm2({ session }: { session: Session | null }) {
                 htmlFor="fullName"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Full name
+                Full Name
               </label>
               <div className="mt-2">
                 <input

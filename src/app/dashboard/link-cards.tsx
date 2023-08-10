@@ -165,20 +165,20 @@ export default function LinkCards({ session }: { session: Session | null }) {
   const tabs = ["View", "Edit"];
 
   return (
-    <div className="ml-[100px]">
-      <div className="flex gap-5">
+    <div className="mt-[50px] sm:mt-0">
+      <div className="flex flex-wrap sm:gap-x-10 gap-x-5 gap-y-7 sm:mx-[200px] mx-[40px]">
         {mode === "view" && (
           <div
             onClick={() => {
               setShowModal(true);
             }}
-            className="w-[170px] mr-[100px] h-[250px] bg-white flex flex-col rounded-lg border-4 shadow-xl hover:border-black hover:cursor-pointer"
+            className="sm:w-[170px] w-[85px]  sm:h-[250px] h-[125px] mr-[0px] bg-gray-300 flex flex-col rounded-lg border-4 shadow-xl hover:border-black hover:cursor-pointer"
           >
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Plus_symbol.svg/256px-Plus_symbol.svg.png"
               alt="Shoes"
             />
-            <h2 className="card-title mx-auto">Add Link</h2>
+            <h2 className="card-title mx-auto text-sm sm:text-lg">Add Link</h2>
           </div>
         )}
         {links.map((linkObject) => (
@@ -201,7 +201,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
         ))}
       </div>
       <Tabs
-        className="absolute top-2"
+        className="absolute sm:top-2 top-[77px] left-6"
         onSelectionChange={(index: any) => {
           // Do something when the selected tab changes
           setMode(tabs[index].toLowerCase());
@@ -359,6 +359,11 @@ export default function LinkCards({ session }: { session: Session | null }) {
                       );
                     } else {
                       updateLinks({ url, description, image_url, title });
+                      setDescription("");
+                      setUrl("");
+                      setImageUrl(null);
+                      setTitle("");
+                      setShowModal(false);
                     }
                   } else {
                     if (currentId) {

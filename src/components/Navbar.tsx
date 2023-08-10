@@ -14,8 +14,9 @@ const Navbar = ({ username }: { username: Profiles["username"] }) => {
       <div className="flex-1">
         <Link
           href="/dashboard"
-          className="btn btn-ghost normal-case text-xl"
+          className="btn btn-ghost normal-case sm:text-xl text-[15px]"
         >{`${username}'s LinkVault`}</Link>
+        <span className="sm:text-xs text-[10px]">{"<- To Dashboard"}</span>
       </div>
 
       <div className="dropdown dropdown-end">
