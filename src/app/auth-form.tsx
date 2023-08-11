@@ -35,7 +35,7 @@ export default function AuthForm() {
           theme="dark"
           showLinks={false}
           providers={["google"]}
-          redirectTo="http://localhost:3000/auth/callback"
+          redirectTo="https://link-vault-rpcxba13o-lukecali-949.vercel.app/auth/callback"
         />
       </div>
     </div>
