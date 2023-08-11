@@ -74,16 +74,6 @@ const Navbar = ({ username }: { username: Profiles["username"] }) => {
           />
         </svg>
       )} */}
-
-      {/* <Image
-        src={
-          navAvatarUrl ||
-          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-        }
-        width={10}
-        height={10}
-        alt="Profile Picture"
-      /> */}
     </div>
   );
 };
