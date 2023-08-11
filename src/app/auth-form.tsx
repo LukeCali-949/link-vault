@@ -7,6 +7,11 @@ import { Database } from "./database.types";
 export default function AuthForm() {
   const supabase = createClientComponentClient<Database>();
 
+  const redirectTo =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/auth/callback`
+      : "";
+
   return (
     <div className="flex flex-col gap-5 ">
       <div className="mx-auto sm:w-[30%] w-[80%] h-[400px] bg-gray-900 p-5 rounded-lg  mt-5">
@@ -35,7 +40,7 @@ export default function AuthForm() {
           theme="dark"
           showLinks={false}
           providers={["google"]}
-          redirectTo="https://link-vault-rpcxba13o-lukecali-949.vercel.app/auth/callback"
+          redirectTo={redirectTo}
         />
       </div>
     </div>
