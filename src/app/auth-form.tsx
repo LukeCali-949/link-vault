@@ -32,7 +32,7 @@ export default function AuthForm() {
         </div>
       </div>
 
-      <div className="mx-auto sm:w-[30%] w-[80%] bg-gray-900 p-5 rounded-lg">
+      <div className="mx-auto sm:w-[30%] w-[80%] bg-gray-300 p-5 rounded-lg">
         <Auth
           supabaseClient={supabase}
           view="magic_link"
