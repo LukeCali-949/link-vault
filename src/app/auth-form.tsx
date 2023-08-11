@@ -20,7 +20,7 @@ export default function AuthForm() {
           <p className="text-white">
             Discover LinkVault - the simple way to store and organize your
             favorite website links. Easily save web pages with your own notes,
-            then view them side by side for quick access. Whether you're
+            then view them side by side for quick access. Whether you&apos;re
             researching or just browsing, LinkVault makes it better. Sign up
             today and organize your web world!
           </p>
