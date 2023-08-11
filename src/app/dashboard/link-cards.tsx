@@ -216,18 +216,20 @@ export default function LinkCards({ session }: { session: Session | null }) {
       {showModal && (
         <div
           onClick={closeModal}
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+          className="fixed overflow-y-auto inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
         >
           <div
-            className="bg-white p-10 rounded-lg mx-auto w-full sm:w-3/4 lg:w-1/2 space-y-8"
+            className="bg-white p-10 rounded-lg mx-auto w-[90%] sm:w-3/4 lg:w-1/2 space-y-8"
             // onSubmit={magicLinkLogin}
           >
-            <h2 className="text-lg font-semibold leading-7 text-gray-900">
-              Link Information
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Please complete all link information
-            </p>
+            <div>
+              <h2 className="text-lg font-semibold leading-7 text-gray-900">
+                Link Information
+              </h2>
+              <p className="mt-5 text-sm leading-6 text-gray-600">
+                Please complete all link information
+              </p>
+            </div>
 
             <div className="mt-5">
               <label

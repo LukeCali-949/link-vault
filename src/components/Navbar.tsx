@@ -10,7 +10,7 @@ const Navbar = ({ username }: { username: Profiles["username"] }) => {
   const { navAvatarUrl } = useAvatarStore();
 
   return (
-    <div className="navbar bg-base-100 mx-auto w-full md:w-1/2 rounded-lg border-4 mb-10">
+    <div className="navbar bg-white mx-auto w-full md:w-1/2 rounded-lg border-4 mb-10">
       <div className="flex-1">
         <Link
           href="/dashboard"
