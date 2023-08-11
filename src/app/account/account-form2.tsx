@@ -103,7 +103,7 @@ export default function AccountForm2({ session }: { session: Session | null }) {
             Profile
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Please complete all profile information. (Username and Full Name
+            Please complete all profile information. (Username and Full Name are
             required to continue)
           </p>
 
