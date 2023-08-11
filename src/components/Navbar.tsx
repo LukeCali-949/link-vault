@@ -30,7 +30,7 @@ const Navbar = ({ username }: { username: Profiles["username"] }) => {
               />
             ) : (
               <svg
-                className="h-20 w-20 text-gray-300 "
+                className="h-[56px] w-[56px] text-gray-300 pr-2"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"

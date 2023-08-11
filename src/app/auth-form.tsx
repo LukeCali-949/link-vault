@@ -8,9 +8,23 @@ export default function AuthForm() {
   const supabase = createClientComponentClient<Database>();
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="mx-auto sm:w-[30%] w-[80%] h-[500px] bg-gray-900 p-5 rounded-lg">
-        <h1 className="text-white">Welcome to LinkVault!</h1>
+    <div className="flex flex-col gap-5 ">
+      <div className="mx-auto sm:w-[30%] w-[80%] h-[400px] bg-gray-900 p-5 rounded-lg  mt-5">
+        <div className="flex flex-col gap-10">
+          <div className="flex gap-5">
+            <img src="/logoicon.png" />
+            <h1 className="text-white my-auto sm:text-5xl text-4xl">
+              LinkVault
+            </h1>
+          </div>
+          <p className="text-white">
+            Discover LinkVault - the simple way to store and organize your
+            favorite website links. Easily save web pages with your own notes,
+            then view them side by side for quick access. Whether you're
+            researching or just browsing, LinkVault makes it better. Sign up
+            today and organize your web world!
+          </p>
+        </div>
       </div>
 
       <div className="mx-auto sm:w-[30%] w-[80%] bg-gray-900 p-5 rounded-lg">
