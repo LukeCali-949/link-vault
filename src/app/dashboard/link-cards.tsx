@@ -219,7 +219,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
           className="fixed overflow-y-auto inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
         >
           <div
-            className="bg-white p-10 rounded-lg mx-auto w-[90%] sm:w-3/4 lg:w-1/2 space-y-8"
+            className="bg-white h-[80%] sm:h-[75%] p-10 rounded-lg mx-auto w-[90%] sm:w-3/4 lg:w-1/2 sm:space-y-8 space-y-6"
             // onSubmit={magicLinkLogin}
           >
             <div>
@@ -227,7 +227,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                 Link Information
               </h2>
               <p className="mt-5 text-sm leading-6 text-gray-600">
-                Please complete all link information
+                {mode === "view" ? "Please complete all link information" : ""}
               </p>
             </div>
 
