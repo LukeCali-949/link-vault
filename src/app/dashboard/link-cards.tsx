@@ -247,7 +247,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                     onChange={(e) => setTitle(e.target.value)}
                     type="title"
                     autoComplete="title"
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full sm:py-2 sm:px-3 py-1 px-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[14px]  sm:text-sm"
                   />
                 ) : (
                   <input
@@ -257,7 +257,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                     readOnly
                     type="title"
                     autoComplete="title"
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full sm:py-2 sm:px-3 py-1 px-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[14px] sm:text-sm"
                   />
                 )}
               </div>
@@ -278,7 +278,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                     onChange={(e) => setUrl(e.target.value)}
                     type="url"
                     autoComplete="url"
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full sm:py-2 sm:px-3 py-1 px-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[14px] sm:text-sm"
                   />
                 ) : (
                   <input
@@ -288,7 +288,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                     readOnly
                     type="url"
                     autoComplete="url"
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full sm:py-2 sm:px-3 py-1 px-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[14px] sm:text-sm"
                   />
                 )}
               </div>
@@ -310,7 +310,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                     onChange={(e) => setDescription(e.target.value)}
                     type="description"
                     autoComplete="description"
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full sm:py-2 sm:px-3 py-1 px-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[14px] sm:text-sm"
                   />
                 ) : (
                   <input
@@ -320,7 +320,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
                     readOnly
                     type="description"
                     autoComplete="description"
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full sm:py-2 sm:px-3 py-1 px-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-[14px] sm:text-sm"
                   />
                 )}
               </div>
