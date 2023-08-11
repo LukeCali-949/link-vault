@@ -37,16 +37,17 @@ export default function AuthForm() {
           supabaseClient={supabase}
           view="magic_link"
           //appearance={{ theme: ThemeSupa }}
-          theme="light"
+          //theme="dark"
           showLinks={false}
           providers={["google"]}
           redirectTo={redirectTo}
           appearance={{
             style: {
-              //button: { background: 'red', color: 'white' },
+              button: { background: "darkgray", color: "white" },
               anchor: { color: "blue" },
-              input: { color: "white" },
               message: { color: "white" },
+              input: { color: "white" },
+              //..
             },
           }}
         />
