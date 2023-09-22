@@ -220,7 +220,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
         >
           <div
             className="bg-white sm:h-min p-10 rounded-lg mx-auto w-[90%] sm:w-3/4 lg:w-1/2 sm:space-y-8 space-y-6"
-            // onSubmit={magicLinkLogin}
+            // onSubmit={magicLinkLogin} recommiting so it works
           >
             <div>
               <h2 className="text-lg font-semibold leading-7 text-gray-900">
