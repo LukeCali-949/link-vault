@@ -219,7 +219,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
           className="fixed overflow-y-auto inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
         >
           <div
-            className="bg-white sm:h-[75%] p-10 rounded-lg mx-auto w-[90%] sm:w-3/4 lg:w-1/2 sm:space-y-8 space-y-6"
+            className="bg-white sm:h-min p-10 rounded-lg mx-auto w-[90%] sm:w-3/4 lg:w-1/2 sm:space-y-8 space-y-6"
             // onSubmit={magicLinkLogin}
           >
             <div>
