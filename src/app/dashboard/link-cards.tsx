@@ -84,6 +84,10 @@ export default function LinkCards({ session }: { session: Session | null }) {
     try {
       setLoading(true);
 
+      if (!user || !user.id) {
+        throw new Error("User or user ID is undefined");
+      }
+
       let { data, error } = await supabase
         .from("links")
         .select("url, image_url, description, title, id")
