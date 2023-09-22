@@ -91,7 +91,7 @@ export default function LinkCards({ session }: { session: Session | null }) {
       let { data, error } = await supabase
         .from("links")
         .select("url, image_url, description, title, id")
-        .eq("user_id", user?.id);
+        .eq("user_id", user.id);
 
       if (error) {
         throw error;
