@@ -11,7 +11,7 @@ export interface Database {
     Tables: {
       profiles: {
         Row: {
-          id: string;
+          id: string | undefined;
           updated_at: string | null;
           created_at: string | null;
           username: string | null;
@@ -19,7 +19,7 @@ export interface Database {
           avatar_url: string | null;
         };
         Insert: {
-          id: string;
+          id: string | undefined;
           updated_at?: string | null;
           created_at?: string | null;
           username?: string | null;
@@ -27,7 +27,7 @@ export interface Database {
           avatar_url?: string | null;
         };
         Update: {
-          id?: string;
+          id?: string | undefined;
           updated_at?: string | null;
           created_at?: string | null;
           username?: string | null;
